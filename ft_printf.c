@@ -1,22 +1,51 @@
-void	ft_puchar(char c);
+#include <stdio.h>
+#include <unistd.h>
+#include <stdarg.h>
+
 
 int	ft_printf(const char *format, ...)
 {
-	char	print_char;
+	char  letter;
+	char	*print_str;
+	int	print_nbr;
 	va_list	arglist;
 
 	va_start(arglist, format);
 	while(*format)
 	{
-		if(*format == '%')
+		if (*format == '%')
 		{
-			format++;
-			if(*format == 'c')
+      format++;
+      if (*format == 's')
 			{
-				print_char = va_arg(arglist, char);
-				ft_putchar(print_char);
+        format++;
+				print_str = va_arg(arglist, char *);
+				printf("%s", print_str);
+			}
+      else if (*format == 'c')
+      {
+        format++;
+        letter = va_arg(arglist, int);
+        printf("%c", letter);
+      }
+			else if (*format == 'i')
+			{
+        format++;
+				print_nbr = va_arg(arglist, int);
+				printf("%i", print_nbr);
 			}
 		}
+    else{
+        printf("%c", *format);
+        format++;
+    }
 	}
+  va_end(arglist);
 	return (0);
+} 
+
+
+int main(void) {
+  ft_printf("Hello world!\n%s\n%c\n%i", "Aslan", 'A', 26);
+  return 0;
 }
