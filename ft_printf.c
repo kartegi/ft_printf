@@ -1,11 +1,12 @@
-#include <stdio.h>
-#include <unistd.h>
 #include <stdarg.h>
 
+void	ft_putchar(char c);
+void	ft_putstr(char *str);
+void	ft_putnbr(int nbr);
 
 int	ft_printf(const char *format, ...)
 {
-	char  letter;
+	char	print_char;
 	char	*print_str;
 	int	print_nbr;
 	va_list	arglist;
@@ -15,37 +16,35 @@ int	ft_printf(const char *format, ...)
 	{
 		if (*format == '%')
 		{
-      format++;
-      if (*format == 's')
+		  	format++;
+		  	if (*format == 's')
 			{
-        format++;
 				print_str = va_arg(arglist, char *);
-				printf("%s", print_str);
+				ft_putstr(print_str);
 			}
-      else if (*format == 'c')
-      {
-        format++;
-        letter = va_arg(arglist, int);
-        printf("%c", letter);
-      }
+		  	else if (*format == 'c')
+		  	{
+				print_char = va_arg(arglist, int);
+				ft_putchar(print_char);
+		  	}
 			else if (*format == 'i')
 			{
-        format++;
 				print_nbr = va_arg(arglist, int);
-				printf("%i", print_nbr);
+				ft_putnbr(print_nbr);
 			}
+			else if(*format == '%')
+				ft_putchar('%');
+			format++;
 		}
-    else{
-        printf("%c", *format);
-        format++;
-    }
+	    	else
+			ft_putchar(*format++);
 	}
-  va_end(arglist);
+      	va_end(arglist);
 	return (0);
 } 
 
 
 int main(void) {
-  ft_printf("Hello world!\n%s\n%c\n%i", "Aslan", 'A', 26);
+  ft_printf("Hello world!\n%s\n%c\n%i ahahhahah\n", "Aslan", 'A', 26);
   return 0;
 }
