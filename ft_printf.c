@@ -1,8 +1,14 @@
-
-
-
-#include <stdarg.h>
-#include "./libft/libft.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/02 10:06:22 by ktennie           #+#    #+#             */
+/*   Updated: 2020/07/02 12:00:19 by ktennie          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 int	ft_printf(const char *format, ...)
 {
@@ -31,7 +37,7 @@ int	ft_printf(const char *format, ...)
 			{
 				print_nbr = va_arg(arglist, int);
 				ft_putnbr(print_nbr);
-			}
+			}z
 			else if(*format == '%')
 				ft_putchar('%');
 			format++;
@@ -45,6 +51,6 @@ int	ft_printf(const char *format, ...)
 
 
 int main(void) {
-  ft_printf("Hello world!\n%s\n%c\n%i ahahhahah\n", "Aslan", 'A', 26);
+  ft_printf("Hello world!\n%s\n%c\n%iaq ahahhahah\n", "Aslan", 'A', 26);
   return 0;
 }
