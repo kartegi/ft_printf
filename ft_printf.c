@@ -1,15 +1,15 @@
-#include <stdarg.h>
 
-void	ft_putchar(char c);
-void	ft_putstr(char *str);
-void	ft_putnbr(int nbr);
+
+
+#include <stdarg.h>
+#include "./libft/libft.h"
 
 int	ft_printf(const char *format, ...)
 {
 	char	print_char;
 	char	*print_str;
-	int	print_nbr;
-	va_list	arglist;
+	int     print_nbr;
+	va_list arglist;
 
 	va_start(arglist, format);
 	while(*format)
