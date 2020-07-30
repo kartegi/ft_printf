@@ -6,7 +6,7 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/06 20:54:20 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/29 20:48:47 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/30 13:04:03 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct	s_mod
 }				t_flag;
 
 
-char	*ft_itoa_base(uintmax_t num, int base);
+char	*ft_itoa_base(uintmax_t num, int base, t_flag *mod);
 int		ft_printf(const char *format, ...);
 void	ft_putnbr_u(unsigned int n);
 void	ft_tozero(t_flag *mod);

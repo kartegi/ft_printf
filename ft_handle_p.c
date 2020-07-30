@@ -6,7 +6,7 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 11:52:50 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/29 12:48:30 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/30 13:04:05 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_handle_p(t_flag *mod, va_list arglist)
 	char		*str;
 
 	p = (uintmax_t)va_arg(arglist, void *);
-	str = ft_itoa_base(p, 16);
+	str = ft_itoa_base(p, 16, mod);
 	if(mod->width)
 		mod->width -= ft_strlen(str) + 2;
 	if(mod->width && !mod->minus && !mod->zero)

@@ -15,7 +15,7 @@
 
 int	main(void)
 {
-	long long int x = -2147483649;
-	ft_printf("%lli", x);
+	char *str = "-2147483649";
+	ft_printf("%.15p", str);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 15:58:38 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/30 12:43:05 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/30 14:28:23 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void	ft_handle_d(t_flag *mod, va_list arglist)
 	intmax_t	num;
 	int			len;
 
-	num = (long long int)va_arg(arglist, long long int);
+	num = va_arg(arglist, long long int);
 	len = ft_nbrlen(num, mod);
 	if(mod->precision_flag)
 	{
