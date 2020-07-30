@@ -1,44 +1,41 @@
-C = gcc
+
+LIBFT = ./libft/libft.a
+
+#N_TEMP = temp.a
 
 NAME = libftprintf.a
 
-FLAGS = -Wall -Wextra -Werror
+SRCS =  ft_flag.c ft_handle_c.c ft_handle_d.c ft_handle_p.c \
+		ft_handle_s.c ft_handle_width.c ft_itoa_base.c \
+		ft_print_conv.c ft_printf.c
+		
+SURPL_O = ft_flag.o ft_handle_c.o ft_handle_d.o ft_handle_p.o \
+          ft_handle_s.o ft_handle_width.o ft_itoa_base.o \
+          ft_print_conv.o ft_printf.o
 
-LIBFT = libft
+CC = gcc
 
-DIR_S = ./
+FLAGS = -c -Wall -Wextra -Werror
 
-DIR_O = ./
+INCLUDES = -I./includes
 
-HEADER = ./
-
-SOURCES = ft_printf.c ft_putp.c
-
-SRCS = $(addprefix $(DIR_S)/,$(SOURCES))
-
-OBJS = $(addprefix $(DIR_O)/,$(SOURCES:.c=.o))
-
-all: $(NAME)
+OBJS = $(SRCS:.c=.o)
 
 $(NAME): $(OBJS)
-	@make -C $(LIBFT)
-	@cp libft/libft.a ./$(NAME)
-	@ar rc $(NAME) $(OBJS)
-	@ranlib $(NAME)
+	$(MAKE) -C ./libft
+	cp libft/libft.a $(NAME)
+	$(CC) $(FLAGS) $(INCLUDES) $(SRCS)
+	ar -rcs $(NAME) $(OBJS)
 
-$(DIR_O)/%.o: $(DIR_S)/%.c $(HEADER)/ft_printf.h
-	@mkdir -p obj
-	@$(CC) $(FLAGS) -I $(HEADER) -o $@ -c $<
+all : $(NAME)
 
-clean:
-	@rm -f $(OBJS)
-	@rm -rf $(DIR_O)
-	@make clean -C $(LIBFT)
+clean :
+	$(MAKE) clean -C ./libft
+	rm -rf $(SURPL_O) 
+	rm -rf $(OBJS)
 
-fclean: clean
-	@rm -f $(NAME)
-	@make fclean -C $(LIBFT)
+fclean : clean
+	$(MAKE) fclean -C ./libft
+	rm -rf $(NAME)
 
-re: fclean all
-
-.PHONY: fclean re norme all clean
+re : fclean all

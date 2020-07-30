@@ -6,16 +6,18 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/25 14:08:24 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/25 14:22:11 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/28 17:29:25 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "includes/ft_printf.h"
 
 void	ft_handle_width(t_flag *mod)
 {
 	int		i;
 
 	i = mod->width;
-	if(i > 0)
+	if(mod->width > 0)
 	{
 		while(i)
 		{
@@ -24,6 +26,7 @@ void	ft_handle_width(t_flag *mod)
 			else
 				ft_putchar(' ');
 			i--;
+			mod->len++;
 		}
 	}
 }

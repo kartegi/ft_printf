@@ -6,11 +6,11 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 10:06:22 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/25 15:41:15 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/29 21:10:29 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
 //int	ft_printf(const char *format, ...)
 //{
@@ -59,13 +59,16 @@
 
 void	ft_tozero(t_flag *mod)
 {
-	mod->x = 0;
+	mod->i = 0;
+	mod->len = 0;
+	mod->x = 0; //for test
 	mod->plus = 0;
 	mod->minus = 0;
 	mod->zero = 0;
 	mod->hash = 0;
 	mod->width = 0;
 	mod->precision = 0;
+	mod->precision_flag = 0;
 	mod->l = 0;
 	mod->ll = 0;
 	mod->L = 0;
@@ -74,42 +77,51 @@ void	ft_tozero(t_flag *mod)
 }
 
 
-int		ft_parse(const char *format, va_list arglist)
+void		ft_parse(const char *format, va_list arglist, t_flag *mod)
 {
-	t_flag	*mod;
-	int		i;
 
-	if (!(mod = (t_flag*)malloc(sizeof(t_flag))))
-		return (0);
-//	if (!ft_typecheck(format))
-//		return (0);
-	ft_tozero(mod);
-	ft_flag(mod, format, arglist);
-	i = ft_print(format, arglist, mod);
-	free(mod);
-	return (i);
+	while(format[mod->i] != '\0')
+	{
+		if (format[mod->i] == '%' && format[mod->i + 1] != '%')
+		{
+			mod->i++;
+			ft_flag(format, arglist, mod);
+			ft_print_conv(format, arglist, mod);
+		}
+		else if (format[mod->i] == '%' && format[mod->i + 1] == '%')
+		{
+			ft_putchar('%');
+			mod->len++;
+		}
+		else
+		{
+			ft_putchar(format[mod->i]);
+			mod->len++;
+		}
+		mod->i++;
+//		printf("\n\n1 ---> %i\n\n", mod->len);
+	}
+
+//	printf("I: %i;\nLen: %i;\nPlus: %i;\nMinus: %i;\nZero: %i;\nHash: %i;\n"
+//		"Width: %i;\nPrecision: %i;\n"
+//		"l: %i;\nll: %i;\nL: %i;\nh: %i;\nhh: %i;\n",
+//		   mod->i, mod->len, mod->plus, mod->minus, mod->zero, mod->hash,
+//		   mod->width, mod->precision, mod->l, mod->ll,
+//		   mod->L, mod->h, mod->hh);
 }
 
 int		ft_printf(const char *format, ...)
 {
-	int			count;
-	int			i;
 	va_list		arglist;
-//	int			flag;
+	t_flag		*mod;
 
-	i	 = 0;
-	count = 0;
+	if (!(mod = (t_flag*)malloc(sizeof(t_flag))))
+		return (0);
 	va_start(arglist, format);
-	while(format[i])
-	{
-		if (format[i] == '%' && format[i + 1] != '%')
-		{
-			if(!ft_parse(&format[i], arglist))
-				return (-1);
-		}
-		else
-			ft_putchar(++i);
-		count++;
-	}
-	return(count);
+	ft_tozero(mod);
+	ft_parse(format, arglist, mod);
+	printf("\n\n1 ---> %i\n\n", mod->len);
+	va_end(arglist);
+	free(mod);
+	return(0);
 }

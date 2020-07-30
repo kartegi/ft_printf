@@ -10,18 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 #include <stdio.h>
 
-void	ft_putp(void *p0)
-{
-	unsigned int x;
-	char* str;
-	uintmax_t p;
-
-	p = (uintmax_t)p0;
-	str = ft_itoa_base(p, 16);
-	ft_putstr("0x");
-	ft_putstr(str);
-	free(str);
-}

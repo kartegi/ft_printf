@@ -6,99 +6,76 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 15:20:20 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/25 16:13:45 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/28 20:03:10 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
-int		ft_size(const char *format, int i, t_flag *mod)
+int		ft_size(const char *format, t_flag *mod)
 {
-	if(format[i] == 'l' && format[i + 1] == 'l')
+	if(format[mod->i] == 'l' && format[mod->i + 1] == 'l')
 	{
 		mod->ll = 1;
-		i++;
+		mod->i++;
 	}
-	else if(format[i] == 'l')
+	else if(format[mod->i] == 'l')
 		mod->l = 1;
-	else if(format[i] == 'h' && format[i + 1] == 'h')
+	else if(format[mod->i] == 'h' && format[mod->i + 1] == 'h')
 	{
 		mod->hh = 1;
-		i++;
+		mod->i++;
 	}
-	else if(format[i] == 'h')
+	else if(format[mod->i] == 'h')
 		mod->h = 1;
-	else if(format[i] == 'L')
+	else if(format[mod->i] == 'L')
 		mod->L = 1;
-	return (i);
+	return (0);
 }
 
-//int		ft_getnum(const char *format, int i, t_flag *mod)
-//{
-//	int	flag;
-//	int	num;
-//	int	tmp;
-//
-//	flag = 0;
-//	num = 0;
-//	if(format[i] == '.')
-//	{
-//		flag = 1;
-//		i++;
-//	}
-//	while(ft_isdigit(format[i]) || format[i] || format[i] == '%')
-//	{
-//		tmp = ft_atoi(&format[i]);
-//		num = (num * 10) + tmp;
-//		i++;
-//	}
-//	if(flag = 1)
-//		mod->percision = num;
-//	else
-//		mod->width = num;
-//	return (i);
-//}
 
-int		ft_mod(t_flag *mod, const char *format, va_list arglist)
+int		ft_mod(const char *format, va_list arglist, t_flag *mod)
 {
-	int	i;
-
-	i = 0;
-	while(!ft_strchr(CONV, format[i]) || format[i] || format[i] == '%')
+	while(!ft_strchr(CONV, format[mod->i]) && format[mod->i] && format[mod->i] != '%')
 	{
-		if(format[i] == '.' && format[i++] == '*' && !mod->precision)
+		if(format[mod->i] == '.' && format[mod->i + 1] == '*' && !mod->precision)
+		{
 			mod->precision = va_arg(arglist, int);
-		else if(format[i] == '*' && !mod->width)
+			mod->i++;
+		}
+		else if(format[mod->i] == '*' && !mod->width)
 			mod->width = va_arg(arglist, int);
-		else if(ft_isdigit(format[i]))
-			mod->width = ft_atoi(&format[i]);
-		else if(format[i] == '.' && ft_isdigit(format[i + 1]))
-			mod->width = ft_atoi(&format[i]);
-		else if(ft_strchr("hlL", format[i]))
-			ft_size(format, i, mod);
-		i++;
+		else if(format[mod->i] == '.' && ft_isdigit(format[mod->i + 1]) && !mod->precision)
+		{
+			mod->precision = ft_atoi(&format[++mod->i]);
+			mod->precision_flag = 1;
+			while(ft_isdigit(format[mod->i + 1]))
+				mod->i++;
+		}
+		else if(ft_isdigit(format[mod->i]) && !mod->width)
+			mod->width = ft_atoi(&format[mod->i]);
+		else if(ft_strchr("hlL", format[mod->i]))
+			ft_size(format, mod);
+		mod->i++;
 	}
-	return (i);
+	return (0);
 }
 
-int		ft_flag(t_flag *mod, const char *format, va_list arglist)
+int		ft_flag(const char *format, va_list arglist, t_flag *mod)
 {
-	int		i;
-
-	i = 0;
-	while((!ft_strchr(MOD, format[i]) || !ft_strchr(CONV, format[i]) ) && (format[i] ||
-		format[i] == '%'))
+	while(!ft_strchr(CHECKALL, format[mod->i]) && format[mod->i] && format[mod->i] != '%')
 	{
-		if(format[i] == '-' && !mod->minus)
+		if(format[mod->i] == '-' && !mod->minus)
 			mod->minus = 1;
-		else if (format[i] == '+' && !mod->plus)
+		else if (format[mod->i] == '+' && !mod->plus)
 			mod->plus = 1;
-		else if (format[i] == '0' && !mod->zero)
+		else if (format[mod->i] == '0' && !mod->zero)
 			mod->zero = 1;
-		else if (format[i] == '#' && !mod->hash)
+		else if (format[mod->i] == '#' && !mod->hash)
 			mod->hash = 1;
-		i++;
+		mod->i++;
 	}
-	ft_mod(mod, &format[i], arglist);
-	return (i);
+	if(format[mod->i] && format[mod->i] != '%')
+		ft_mod(format, arglist, mod);
+	return (0);
 }

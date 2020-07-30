@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 //#include "ft_printf.h"
-#include "libft/libft.h"
+#include "includes/libft.h"
 void	ft_putnbr_u(unsigned int n)
 {
 	int	i;

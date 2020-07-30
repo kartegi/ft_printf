@@ -6,13 +6,13 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 14:40:34 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/20 18:31:13 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/29 12:31:07 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
-void ft_itoa_base(uintmax_t num, int base)
+char	*ft_itoa_base(uintmax_t num, int base)
 {
 	int			i;
 	uintmax_t	val_cp;
@@ -31,6 +31,5 @@ void ft_itoa_base(uintmax_t num, int base)
 		str[i] = (rem > 9)? (rem-10) + 'a' : rem + '0';
 		num /= base;
 	}
-	ft_putstr(str);
-	free(str);
+	return (str);
 }

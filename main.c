@@ -1,5 +1,5 @@
 //#include "ft_printf.h"
-//#include <stdio.h>
+#include <stdio.h>
 //
 //int	main(void)
 //{
@@ -11,11 +11,11 @@
 //	return (0);
 //}
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
 int	main(void)
 {
-	int x = 12;
-	ft_printf("%d\n", x);
+	long long int x = -2147483649;
+	ft_printf("%lli", x);
 	return (0);
 }

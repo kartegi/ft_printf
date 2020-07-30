@@ -6,37 +6,32 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/24 15:20:06 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/25 15:55:54 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/07/29 15:58:32 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
-int		ft_print(const char *format, va_list arglist, t_flag *mod)
+int		ft_print_conv(const char *format, va_list arglist, t_flag *mod)
 {
-	int i;
-
-	i = 0;
-	while(format[i] != ' ' || format[i] != '%' || format[i])
+	if(ft_strchr(CONV, format[mod->i]))
 	{
-		if(format[i] == 'c')
-			ft_putchar(va_arg(arglist, int));
-		else if (format[i] == 's')
-			ft_putstr(va_arg(arglist, char *));
-		else if (format[i] == 'p')
+		if(format[mod->i] == 'c')
+			ft_handle_c(mod, arglist);
+		else if (format[mod->i] == 's')
+			ft_handle_s(mod, arglist);
+		else if (format[mod->i] == 'p')
+			ft_handle_p(mod, arglist);
+		else if (format[mod->i] == 'd' || format[mod->i] == 'i')
+			ft_handle_d(mod, arglist);
+		else if (format[mod->i] == 'o')
 			mod->x = 1;
-		else if (format[i] == 'o')
+		else if (format[mod->i] == 'u')
 			mod->x = 1;
-		else if (format[i] == 'd' || format[i] == 'i')
-			ft_putnbr(va_arg(arglist, int));
-		else if (format[i] == 'u')
+		else if (format[mod->i] == 'x' || format[mod->i] == 'X')
 			mod->x = 1;
-		else if (format[i] == 'x' || format[i] == 'X')
+		else if (format[mod->i] == 'f')
 			mod->x = 1;
-		else if (format[i] == 'f')
-			mod->x = 1;
-		else
-			return (0);
 	}
-	return (i);
+	return (0);
 }
