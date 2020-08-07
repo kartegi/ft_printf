@@ -6,148 +6,139 @@
 /*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 15:58:38 by ktennie           #+#    #+#             */
-/*   Updated: 2020/07/30 14:28:23 by ktennie          ###   ########.fr       */
+/*   Updated: 2020/08/05 17:28:12 by ktennie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_printf.h"
-
-int		ft_nbrlen(intmax_t n, t_flag *mod)
+//
+int		ft_nbrlen_d(intmax_t n)
 {
 	int	i;
 
 	i = 0;
-	if(n < 0)
-	{
-		n *= -1;
+	if (n == 0)
 		i++;
-	}
-	while(n > 0)
+	while (n > 0)
 	{
 		n /= 10;
 		i++;
 	}
-	mod->len += i;
 	return (i);
 }
 //
-//void	ft_precision(t_flag *mod)
-//{
-//	while(mod->precision)
-//	{
-//		ft_putchar('0');
-//		mod->precision--;
-//		mod->len++;
-//	}
-//	mod->len--;
-//}
-//
-//void	ft_print_num(t_flag *mod, intmax_t num)
-//{
-//	if(mod->plus && num > 0)
-//		ft_putchar('+');
-//	if(mod->precision > 0)
-//		ft_precision(mod);
-//	if(mod->hh)
-//		ft_putnbr((signed char)num);
-//	else if(mod->h)
-//		ft_putnbr((short int)num);
-//	else if(mod->ll)
-//		ft_putnbr((long long int)num);
-//	else if(mod->l)
-//		ft_putnbr((long int)num);
-//	else
-//		ft_putnbr((int)num);
-//}
-//
-//void	ft_handle_d(t_flag *mod, va_list arglist)
-//{
-//	intmax_t	num;
-//	int			len;
-//
-//	num = (long long int)va_arg(arglist, long long int);
-//	len = ft_nbrlen(num, mod);
-//	if(mod->precision_flag)
-//	{
-//		if(mod->precision > len)
-//		{
-//			if(mod->width)
-//			{
-//				mod->width -= ((mod->precision - len) + len);
-//				mod->precision -= mod->width;
-//			}
-//			else
-//				mod->precision -= len;
-//		}
-//		else
-//			mod->precision *= -1;
-//	}
-//	if(!mod->precision_flag && mod->width)
-//		mod->width -= len;
-//	if(mod->width && !mod->minus && !mod->zero)
-//		ft_handle_width(mod);
-//	ft_print_num(mod, num);
-//	if(mod->width && mod->minus && !mod->zero)
-//		ft_handle_width(mod);
-//}
-
-
-void	ft_precision(t_flag *mod)
+char	*ft_nbr2str(intmax_t n)
 {
-	while(mod->precision)
+	int			i;
+	int			cp;
+	char		*str;
+
+	i = ft_nbrlen_d(n);
+	str = ft_strnew(i);
+	while (i-- > 0)
+	{
+		cp = n % 10;
+		str[i] = cp + '0';
+		n /= 10;
+	}
+	return (str);
+}
+//
+//void	ft_modify_d(t_flag *mod, intmax_t num)
+//{
+//	intmax_t	len;
+//	char		*str;
+//
+//	len = ft_nbrlen(num);
+//	if (mod->zero && !mod->minus && mod->width && mod->width > len)
+//	{
+//		mod->precision_flag = 1;
+//		mod->precision += mod->width;
+//		mod->width = 0;
+//	}
+//	str = ft_nbr2str(num, mod);
+//	if (mod->width && mod->zero && mod->precision_flag && mod->precision > len)
+//		mod->zero = 0;
+//	else if (mod->width && mod->zero && mod->precision_flag && mod->precision )
+//	mod->width -= ft_strlen(str) + (mod->plus == 2 ? 1 : 0);
+//	mod->len += ft_strlen(str);
+//	if (mod->width && !mod->minus)
+//		ft_handle_width(mod);
+//	if (mod->plus == 2)
+//		ft_putchar('+');
+//	ft_putstr(str);
+//	if (mod->width && mod->minus)
+//	{
+//		ft_handle_width(mod);
+//		mod->zero = 0;
+//	}
+//	free(str);
+//}
+
+void	ft_modify_d(t_flag *mod, intmax_t num, char *str)
+{
+	int 	len;
+
+	len = ft_nbrlen_d(num) + (mod->negative || mod->plus ? 1 : 0);
+	if (mod->width && mod->precision_flag)
+		mod->zero = 0;
+	mod->width -= len + (mod->precision_flag && mod->precision > ft_nbrlen_d(num)
+			? mod->precision - ft_nbrlen_d(num) : 0);
+	mod->width += num == 0 && mod->precision_flag && mod->precision == 0 ? 1 : 0;
+	mod->len += len + ((mod->precision_flag && mod->precision > ft_nbrlen_d(num))
+			? mod->precision - ft_nbrlen_d(num) : 0);
+	mod->len -= num == 0 && mod->precision_flag && mod->precision == 0 ? 1 : 0;
+	if (mod->width && !mod->minus && !mod->zero)
+		ft_handle_width(mod);
+	if (mod->plus && !mod->negative)
+		ft_putchar('+');
+	else if (mod->negative)
+		ft_putchar('-');
+	if (mod->width && !mod->minus && mod->zero)
+		ft_handle_width(mod);
+	//precision
+	while (mod->precision_flag && mod->precision > ft_nbrlen_d(num))
 	{
 		ft_putchar('0');
 		mod->precision--;
+	}
+	if (mod->space && mod->width <= 0 && !mod->negative && !mod->plus)
+	{
+		ft_putchar(' ');
 		mod->len++;
 	}
-	mod->len--;
-}
-
-void	ft_print_num(t_flag *mod, intmax_t num)
-{
-	if(mod->plus && num > 0)
-		ft_putchar('+');
-	if(mod->precision > 0)
-		ft_precision(mod);
-	if(mod->hh)
-		ft_putnbr((signed char)num);
-	else if(mod->h)
-		ft_putnbr((short int)num);
-	else if(mod->ll)
-		ft_putnbr((long long int)num);
-	else if(mod->l)
-		ft_putnbr((long int)num);
-	else
-		ft_putnbr((int)num);
+	num == 0 && mod->precision_flag && mod->precision == 0 ? 0 : ft_putstr(str);
+	if (mod->width && mod->minus)
+		ft_handle_width(mod);
 }
 
 void	ft_handle_d(t_flag *mod, va_list arglist)
 {
 	intmax_t	num;
-	int			len;
+	char 		*str;
 
-	num = va_arg(arglist, long long int);
-	len = ft_nbrlen(num, mod);
-	if(mod->precision_flag)
+	if (mod->hh)
+		num = (signed char)va_arg(arglist, int);
+	else if (mod->h)
+		num = (short int)va_arg(arglist, int);
+	else if (mod->ll)
+		num = (long long int)va_arg(arglist, long long int);
+	else if (mod->l)
+		num = va_arg(arglist, long int);
+	else
+		num = va_arg(arglist, int);
+	if(num < 0)
 	{
-		if(mod->precision > len)
-		{
-			if(mod->width)
-			{
-				mod->width -= ((mod->precision - len) + len);
-				mod->precision -= mod->width;
-			}
-			else
-				mod->precision -= len;
-		}
-		else
-			mod->precision *= -1;
+		mod->negative = 1;
+		mod->plus = 0;
+		num *= -1;
 	}
-	if(!mod->precision_flag && mod->width)
-		mod->width -= len;
-	if(mod->width && !mod->minus && !mod->zero)
-		ft_handle_width(mod);
-	ft_print_num(mod, num);
-	if(mod->width && mod->minus && !mod->zero)
-		ft_handle_width(mod);
+	if (num == LLONG_MIN)
+	{
+		ft_putstr("-9223372036854775808");
+		mod->len += 20;
+		return ;
+	}
+	str = ft_nbr2str(num);
+	ft_modify_d(mod, num, str);
 }

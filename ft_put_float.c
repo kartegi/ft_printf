@@ -1,67 +1,67 @@
-#include <stdio.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_put_float.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ktennie <ktennie@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/08/01 00:35:29 by ktennie           #+#    #+#             */
+/*   Updated: 2020/08/06 17:09:36 by ktennie          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-long long int ft_powerof(int n)
+#include "includes/ft_printf.h"
+
+long long int	ft_powerof(int n)
 {
-	long long int result;
-	int exp;
-	int base;
+	long long int	result;
+	int				base;
 
-	exp = n;
 	base = 10;
 	result = 1;
-	while(exp > 0)
+	while (n > 0)
 	{
 		result *= base;
-		exp--;
+		n--;
 	}
 	return (result);
 }
 
-void  ft_putrem(double rem, int base)
+void			ft_putrem(long double rem, int base)
 {
-	int           i;
-	int           flag;
-	long long int power;
-
+	int				i;
+	int				flag;
+	long long int	power;
 
 	i = 0;
 	flag = 0;
 	power = ft_powerof(base);
-	while(i < base)
+	while (i < base)
 	{
 		if ((int)(rem * power) % 10 >= 5 && i == 0)
 			flag = 1;
 		rem = rem * 10.0;
-		if(flag == 1 && i == base - 1)
+		if (flag == 1 && i == base - 1)
 			rem++;
 		i++;
 	}
-	printf("%lli", (long long int)rem);
+	ft_putchar('.');
+	ft_putnbr((long long int)rem);
 }
 
-
-void  ft_putfloat(double n)
+void			ft_put_float(long double n, t_flag *mod)
 {
-	int     num;
-	double  rem;
+	long double	rem;
 
-	rem = (int)n - n;
-	num = n - rem;
-	if(rem < 0.0)
+	rem = n - (int)n;
+	if (n < 0.0)
+	{
 		rem *= -1;
-	printf("%i.", num);
-	ft_putrem(rem, 7);
-}
-
-int main(void)
-{
-	// printf("%lli", ft_powerof(9));
-	double x = 1234.123456;
-	// ft_putrem(x, 6);
-	printf("\nLib printf: %.7f\n", x);
-	printf("Asl printf: ");
-	ft_putfloat(x);
-	printf("\n");
-	return 0;
+		n *= -1.0;
+	}
+	ft_putnbr((int)n);
+	if (!mod->precision_flag || mod->precision > 0)
+		ft_putrem(rem, mod->precision_flag ? mod->precision : 6);
+	else if (mod->hash && mod->precision_flag && mod->precision == 0)
+		ft_putchar('.');
 }

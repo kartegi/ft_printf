@@ -17,11 +17,11 @@ void	ft_handle_width(t_flag *mod)
 	int		i;
 
 	i = mod->width;
-	if(mod->width > 0)
+	if (mod->width > 0)
 	{
-		while(i)
+		while (i)
 		{
-			if(mod->zero && !mod->minus)
+			if (mod->zero && !mod->minus)
 				ft_putchar('0');
 			else
 				ft_putchar(' ');
